@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'ckeditor',
     'ckeditor_uploader',
+    'django_nose',
 
     # local
     'api_edu',
@@ -138,15 +139,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':
-    ('rest_framework.authentication.TokenAuthentication', ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #  'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PAGINATION_CLASS':
     'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE':
-    100,
-    'DEFAULT_PERMISSION_CLASSES': [
+    'PAGE_SIZE': 100,
+    'DEFAULT_PERMISSION_CLASSES': ( # API access permissions for project level
         'rest_framework.permissions.AllowAny',
-    ]
+        #  'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ),
 }
 
 # Internationalization
@@ -173,16 +176,30 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_DIRS = [
-    os.path.join(STATIC_ROOT, 'css/'),
-    os.path.join(STATIC_ROOT, 'js/'),
-    os.path.join(STATIC_ROOT, 'fonts/'),
-    os.path.join(STATIC_ROOT, 'users/'),
-    os.path.join(STATIC_ROOT, 'images/')
+
+if not DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(STATIC_ROOT, 'css/'),
+        os.path.join(STATIC_ROOT, 'js/'),
+        os.path.join(STATIC_ROOT, 'fonts/'),
+        os.path.join(STATIC_ROOT, 'users/'),
+        os.path.join(STATIC_ROOT, 'images/')
+    ]
+
+# TODO: Create 3 diff settings for (dev, prod, 3rd-party librairies)
+# 3rd-party configuation
+
+# *************** django-nose configuation for tests converage ***************
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=app_edu, api_edu',
 ]
 
-
-################# CKEDITOR CONFIG ###################
+# *************** CKEDITOR CONFIG ***************
 CKEDITOR_UPLOAD_PATH = "ckeditor/uploads/"
 #  CKEDITOR_FILENAME_GENERATOR = 'jimweb.utils.get_filename'
 CKEDITOR_CONFIGS = {

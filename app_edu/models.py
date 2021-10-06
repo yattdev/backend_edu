@@ -13,12 +13,12 @@ class Customer(models.Model):
                                     blank=True)
     address = models.CharField(max_length=40)
     mobile = models.CharField(max_length=20, null=False)
-    Country = models.CharField(max_length=20, null=False, blank=True)
-    Company = models.CharField(max_length=20, null=False, blank=True)
-    City = models.CharField(max_length=20, null=False, blank=True)
-    State = models.CharField(max_length=20, null=False, blank=True)
-    Zip_Code = models.IntegerField(blank=True, default="1")
-    Telephone = models.IntegerField(blank=True, default="1")
+    country = models.CharField(max_length=20, null=False, blank=True)
+    company = models.CharField(max_length=20, null=False, blank=True)
+    city = models.CharField(max_length=20, null=False, blank=True)
+    state = models.CharField(max_length=20, null=False, blank=True)
+    zip_code = models.IntegerField(blank=True, default="1")
+    telephone = models.IntegerField(blank=True, default="1")
 
     @property
     def get_name(self):
@@ -53,8 +53,7 @@ class Category(models.Model):
                                verbose_name="For Add In Right Menu")
     created_at = models.DateTimeField(auto_now_add=True)
     disc = models.BooleanField(default=False, verbose_name='Add In Disclaimer')
-    hit = models.PositiveIntegerField(default=0,
-                                      verbose_name="nombre de hits")
+    hit = models.PositiveIntegerField(default=0, verbose_name="nombre de hits")
 
     def post_count(self):
         return self.posts.all().count()
@@ -82,13 +81,13 @@ class Category(models.Model):
             full_path.append(k.title)
             k = k.parent
 
-        return ' -> '.join(full_path[::-1])
+        return full_path[::-1]
 
 
-class subcat(models.Model):
+class Subcat(models.Model):
     parent = models.ForeignKey(Category,
                                on_delete=models.CASCADE,
-                               related_name='subcat',
+                               related_name='Subcat',
                                blank=True,
                                null=True,
                                help_text='Select Only Sub Category')
@@ -98,7 +97,7 @@ class subcat(models.Model):
     disc = models.BooleanField(default=False, verbose_name='Add In Disclaimer')
 
     class Meta:
-        #enforcing that there can not be two categories under a parent with same slug
+        # enforcing that there can not be two categories under a parent with same slug
 
         # __str__ method elaborated later in post.  use __unicode__ in place of
 
@@ -121,7 +120,7 @@ class subcat(models.Model):
             full_path.append(k.title)
             k = k.parent
 
-        return ' -> '.join(full_path[::-1])
+        return full_path[::-1]
 
 
 class MainCourse(models.Model):
@@ -162,9 +161,9 @@ class Post(models.Model):
                                  on_delete=models.CASCADE,
                                  default=1,
                                  related_name="posts")
-    subcategory = models.ForeignKey(subcat,
+    subcategory = models.ForeignKey(Subcat,
                                     on_delete=models.CASCADE,
-                                    related_name="subcat",
+                                    related_name="Subcat",
                                     blank=True,
                                     null=True)
     hit = models.PositiveIntegerField(
@@ -205,7 +204,6 @@ class Post(models.Model):
     #     return image
 
 
-
 class Curriculam(models.Model):
     """ Les modules du cours """
     title = models.CharField(max_length=500)
@@ -236,8 +234,8 @@ class timing(models.Model):
 
 class Certificate(models.Model):
     cert_file = models.FileField(upload_to='media/certificate',
-                            null=True,
-                            blank=True)
+                                 null=True,
+                                 blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     Post = models.ForeignKey(Post,
                              on_delete=models.CASCADE,

@@ -5,34 +5,46 @@ from django.utils.html import format_html
 
 # Register your models here.
 
+
 class CuricullamAdmin(admin.StackedInline):
     model = Curriculam
- 
+
+
 class featuresAdmin(admin.StackedInline):
     model = features
+
 
 class faqAdmin(admin.StackedInline):
     model = faq
 
+
 class timeAdmin(admin.StackedInline):
     model = timing
+
 
 class CertificateAdmin(admin.StackedInline):
     model = Certificate
 
+
 class videoAdmin(admin.StackedInline):
     model = video
- 
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    inlines = [CuricullamAdmin, featuresAdmin,faqAdmin,timeAdmin,CertificateAdmin, videoAdmin]
- 
+    inlines = [
+        CuricullamAdmin, featuresAdmin, faqAdmin, timeAdmin, CertificateAdmin,
+        videoAdmin
+    ]
+
     class Meta:
-       model = Post
+        model = Post
+
 
 @admin.register(Curriculam)
 class CuricullamAdmin(admin.ModelAdmin):
     pass
+
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['user', 'ordered']
@@ -45,6 +57,6 @@ admin.site.register(MainCourse)
 admin.site.register(Customer)
 admin.site.register(Cart)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(subcat)
+admin.site.register(Subcat)
 admin.site.register(promocode)
 admin.site.register(offers)
